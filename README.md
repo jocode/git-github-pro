@@ -98,3 +98,111 @@ Todos estos comandos tiene una función de autocompletado, o sea, puedes escribi
 Recuerda que podemos descubrir todos los argumentos de un comando con el argumento `--help (por ejemplo, cat --help)`.
 
 ## Comandos básicos en Git
+
+### ¿Qué es staging, repositorios y cuál es el ciclo básico de trabajo en GitHub?
+
+Para iniciar un repositorio, o sea, activar el sistema de control de versiones de Git en tu proyecto, solo debes ejecutar el comando `git init`.
+
+Este comando se encargará de dos cosas: primero, crear una carpeta .git donde se guardará toda la base de datos con cambios atómicos de nuestro proyecto; y segundo, crear un área en la memoria RAM, que conocemos como Staging, que guardará temporalmente nuestros archivos (cuando ejecutemos un comando especial para eso) y nos permitirá, más adelante, guardar estos cambios en el repositorio (también con un comando especial).
+
+**Ciclo de vida o estados de los archivos en Git:**
+
+Cuando trabajamos con Git, nuestros archivos pueden vivir y moverse entre 4 diferentes estados (cuando trabajamos con repositorios remotos pueden ser más estados pero lo estudiaremos más adelante):
+
+    Archivos Tracked: Son los archivos que viven dentro de Git, no tienen cambios pendientes y sus últimas actualizaciones han sido guardadas en el repositorio gracias a los comandos git add y git commit.
+    Archivos Staged: Son archivos en Staging. Viven dentro de Git y hay registro de ellos porque han sido afectados por el comando git add, aunque no sus últimos cambios. Git ya sabe de la existencia de estos últimos cambios pero todavía no han sido guardados definitivamente en el repositorio porque falta ejecutar el comando git commit.
+    Archivos Unstaged: Entiendelos como archivos “Tracked pero Unstaged”. Son archivos que viven dentro de Git pero no han sido afectados por el comando git add ni mucho menos por git commit. Git tiene un registro de estos archivos pero está desactualizado, sus últimas versiones solo están guardadas en el disco duro.
+    Archivos Untracked: Son archivos que NO viven dentro de Git, solo en el disco duro. Nunca han sido afectados por git add, así que Git no tiene registros de su existencia.
+
+Recuerda que hay un caso muy raro donde los archivos tienen dos estados al mismo tiempo: Staged y Untracked. Esto pasa guardas los cambios de un archivo en el área de Staging (con el comando git add) pero, antes de hacer commit para guardar los cambios en el repositorio, haces nuevos cambios que todavía no han sido guardados en el área de Staging (en realidad, todo sigue funcionando igual pero es un poco divertido).
+
+Comandos para mover archivos entre los estados de Git:
+
+    git status: Nos permite ver el estado de todos nuestros archivos y carpetas.
+    git add: Nos ayuda a mover archivos del Untracked o Unstaged al estado Staged. Podemos usar git nombre-del-archivo-o-carpeta para añadir archivos y carpetas individuales o git add -A para mover todos los archivos de nuestro proyecto (tanto Untrackeds como unstageds).
+    git reset HEAD: Nos ayuda a sacar archivos del estado Staged para devolverlos a su estado anterior. Si los archivos venían de Unstaged, vuelven allí. Y lo mismo se venían de Untracked.
+    git commit: Nos ayuda a mover archivos de Unstaged a Staged. Esta es una ocasión especial, los archivos han sido guardado o actualizados en el repositorio. Git nos pedirá que dejemos un mensaje para recordar los cambios que hicimos y podemos usar el argumento -m para escribirlo (git commit -m "mensaje").
+    git rm: Este comando necesita alguno de los siguientes argumentos para poder ejecutarse correctamente:
+    - git rm --cached: Mueve los archivos que le indiquemos al estado Untracked.
+    - git rm --force: Elimina los archivos de Git y del disco duro. Git guarda el registro de la existencia de los archivos, por lo que podremos recuperarlos si es necesario (pero debemos usar comandos más avanzados).
+
+### ¿Qué es un Branch (rama) y cómo funciona un Merge en Git?
+
+Git es una base de datos muy precisa con todos los cambios y crecimiento que ha tenido nuestro proyecto. Los commits son la única forma de tener un registro de los cambios. Pero las ramas amplifican mucho más el potencial de Git.
+
+**Todos los commits se aplican sobre una rama**. Por defecto, siempre empezamos en la rama master (pero puedes cambiarle el nombre si no te gusta) y creamos nuevas ramas, a partir de esta, para crear flujos de trabajo independientes.
+
+Crear una nueva rama se trata de copiar un commit (de cualquier rama), pasarlo a otro lado (a otra rama) y continuar el trabajo de una parte específica de nuestro proyecto sin afectar el flujo de trabajo principal (que continúa en la rama master o la rama principal).
+
+**Los equipos de desarrollo tienen un estándar**: Todo lo que esté en la **rama master va a producción**, las *nuevas features, características y experimentos van en una rama “development”* (para unirse a master cuando estén definitivamente listas) y los issues o errores se solucionan en una rama “hotfix” para unirse a master tan pronto como sea posible.
+
+    Crear una nueva rama lo conocemos como Checkout. Unir dos ramas lo conocemos como Merge.
+
+Podemos crear todas las ramas y commits que queramos. De hecho, podemos aprovechar el registro de cambios de Git para crear ramas, traer versiones viejas del código, arreglarlas y combinarlas de nuevo para mejorar el proyecto.
+
+Solo ten en cuenta que combinar estas ramas (sí, hacer “merge”) puede generar conflictos. Algunos archivos pueden ser diferentes en ambas ramas. Git es muy inteligente y puede intentar unir estos cambios automáticamente, pero no siempre funciona. En algunos casos, somos nosotros los que debemos resolver estos conflictos “a mano”.
+
+- [A successful Git branching model](https://nvie.com/posts/a-successful-git-branching-model/)
+
+- [Comandos básicos de GIT](https://www.hostinger.mx/tutoriales/comandos-de-git)
+
+
+### Crea un repositorio de Git y haz tu primer commit
+
+Si quieres ver los archivos ocultos de una carpeta puedes habilitar la opción de Vista > Mostrar u ocultar > Elementos ocultos (en Windows) o ejecutar el comando `ls -a`.
+
+Le indicaremos a Git que queremos crear un nuevo repositorio para utilizar su sistema de control de versiones. Solo debemos posicionarnos en la carpeta raíz de nuestro proyecto y ejecutar el comando **git init**.
+
+Recuerda que al ejecutar este comando (y de aquí en adelante) vamos a tener una nueva carpeta oculta llamada .git con toda la base de datos con cambios atómicos en nuestro proyecto.
+
+Recuerda que Git está optimizado para trabajar en equipo, por lo tanto, debemos darle un poco de información sobre nosotros. No debemos hacerlo todas las veces que ejecutamos un comando, basta con ejecutar solo una sola vez los siguientes comandos con tu información:
+
+```
+git config --global user.email "tu@email.com"
+git config --global user.name "Tu Nombre"
+```
+
+Existen muchas otras configuraciones de Git que puedes encontrar ejecutando el comando `git config --list` (o solo git config para ver una explicación más detallada).
+
+- **git config**
+
+-**git config** Configuración por defecto de git
+
+- **git config --list --show-origin** Muestra dónde están guardadas las configuraciones
+
+- **git config --global** (Un solo guión indica sólo las letras, dos guiones significa que va a usar una palara) 
+
+- **git config --global user.name "Johan Mosquera"** Configuramos de manera global el nombre del usuario
+
+- **git config --global user.email "jocode@email.com"** Configuro el correo a nivel global en la configuración de git.
+
+Con el comando **code archivo.ext** Abrimos un nuevo archivo en VSCode
+
+- **git add .** Agrega todos los archivos que están en el directorio de trabajo.
+
+- **git log archivo.ext** Muestra la historia de un archivo
+
+- **git config --global core.editor "nombre del editor"** Cambiamos el editor por defecto
+
+
+### Analizar cambios en los archivos de tu proyecto con Git
+
+El comando **git show** nos muestra los cambios que han existido sobre un archivo y es muy útil para detectar cuándo se produjeron ciertos cambios, qué se rompió y cómo lo podemos solucionar. Pero podemos ser más detallados.
+
+Si queremos ver la diferencia entre una versión y otra, no necesariamente todos los cambios desde la creación del archivo, podemos usar el comando **git diff commitA commitB**.
+
+Recuerda que puedes obtener el ID de tus commits con el comando **git log**.
+
+- `ESC - Shift - Z - Z` Con este comando salimos y guardamos el commit desde VIM
+
+
+
+### Volver en el tiempo en nuestro repositorio utilizando branches y checkout
+
+El comando **git checkout + ID del commit** nos permite viajar en el tiempo. Podemos volver a cualquier versión anterior de un archivo específico o incluso del proyecto entero. Esta también es la forma de crear ramas y movernos entre ellas.
+
+También hay una forma de hacerlo un poco más “ruda”: usando el comando **git reset**. En este caso, no solo “volvemos en el tiempo”, sino que borramos los cambios que hicimos después de este commit.
+
+Hay dos formas de usar git reset: con el argumento **--hard**, borrando toda la información que tengamos en el área de staging (y perdiendo todo para siempre). O, un poco más seguro, con el argumento **--soft**, que mantiene allí los archivos del área de staging para que podamos aplicar nuestros últimos cambios pero desde un commit anterior.
+
+- **git reset HEAD^** Borra el ultimo commit manteniendo los archivos en el staging area, ideal cuando haz hecho un commit equivocadamente
