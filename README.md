@@ -206,3 +206,215 @@ También hay una forma de hacerlo un poco más “ruda”: usando el comando **g
 Hay dos formas de usar git reset: con el argumento **--hard**, borrando toda la información que tengamos en el área de staging (y perdiendo todo para siempre). O, un poco más seguro, con el argumento **--soft**, que mantiene allí los archivos del área de staging para que podamos aplicar nuestros últimos cambios pero desde un commit anterior.
 
 - **git reset HEAD^** Borra el ultimo commit manteniendo los archivos en el staging area, ideal cuando haz hecho un commit equivocadamente
+
+## Flujo de trabajo básico en Git
+
+### Flujo de trabajo básico con un repositorio remoto
+
+No veas esta clase a menos que hayas practicado todos los comandos de las clases anteriores.
+
+Por ahora, nuestro proyecto vive únicamente en nuestra computadora. Esto significa que no hay forma de que otros miembros del equipo trabajen en él.
+
+Para solucionar esto están los servidores remotos: un nuevo estado que deben seguir nuestros archivos para conectarse y trabajar con equipos de cualquier parte del mundo.
+
+Estos servidores remotos pueden estar alojados en GitHub, GitLab, BitBucket, entre otros. Lo que van a hacer es guardar el mismo repositorio que tienes en tu computadora y darnos una URL con la que todos podremos acceder a los archivos del proyecto para descargarlos, hacer cambios y volverlos a enviar al servidor remoto para que otras personas vean los cambios, comparen sus versiones y creen nuevas propuestas para el proyecto.
+
+Esto significa que debes aprender algunos nuevos comandos:
+
+- **git clone url_del_servidor_remoto**: Nos permite descargar los archivos de la última versión de la rama principal y todo el historial de cambios en la carpeta .git.
+- **git push**: Luego de hacer git add y git commit debemos ejecutar este comando para mandar los cambios al servidor remoto.
+- **git fetch**: Lo usamos para traer actualizaciones del servidor remoto y guardarlas en nuestro repositorio local (en caso de que hayan, por supuesto).
+- **git merge**: También usamos el comando git fetch con servidores remotos. Lo necesitamos para combinar los últimos cambios del servidor remoto y nuestro directorio de trabajo.
+- **git pull**: Básicamente, git fetch y git merge al mismo tiempo.
+
+
+### Introducción a las ramas o branches de Git
+
+Las ramas son la *forma de hacer cambios en nuestro proyecto sin afectar el flujo de trabajo de la rama principal*. Esto porque queremos trabajar una parte muy específica de la aplicación o simplemente experimentar.
+
+La cabecera o HEAD representan la rama y el commit de esa rama donde estamos trabajando. Por defecto, esta cabecera aparecerá en el último commit de nuestra rama principal. Pero podemos cambiarlo al crear una rama (`git branch rama, git checkout -b rama`) o movernos en el tiempo a cualquier otro commit de cualquier otra rama con los comandos (`git reset id-commit, git checkout rama-o-id-commit`).
+
+
+### Fusión de ramas con Git merge
+
+El comando `git merge` nos permite crear un nuevo commit con la combinación de dos ramas (la rama donde nos encontramos cuando ejecutamos el comando y la rama que indiquemos después del comando).
+
+```
+# Crear un nuevo commit en la rama master combinando
+# los cambios de la rama cabecera:
+git checkout master
+git merge cabecera
+
+# Crear un nuevo commit en la rama cabecera combinando
+# los cambios de cualquier otra rama:
+git checkout cabecera
+git merge cualquier-otra-rama
+```
+
+
+### Solución de conflictos al hacer un merge
+
+**Git nunca borra nada** a menos que nosotros se lo indiquemos. Cuando usamos los comandos ``git merge` o `git checkout` estamos cambiando de rama o creando un nuevo commit, no borrando ramas ni commits (recuerda que puedes borrar commits con git reset y ramas con git branch -d).
+
+Git es muy inteligente y puede resolver algunos conflictos automáticamente: cambios, nuevas líneas, entre otros. Pero algunas veces no sabe cómo resolver estas diferencias, por ejemplo, cuando dos ramas diferentes hacen cambios distintos a una misma línea.
+
+Esto lo conocemos como **conflicto** y lo podemos resolver manualmente, solo debemos hacer el merge, ir a nuestro editor de código y elegir si queremos quedarnos con alguna de estas dos versiones o algo diferente. Algunos editores de código como VSCode nos ayudan a resolver estos conflictos sin necesidad de borrar o escribir líneas de texto, basta con hundir un botón y guardar el archivo.
+
+Recuerda que siempre debemos crear un nuevo commit para aplicar los cambios del merge. Si Git puede resolver el conflicto hará commit automáticamente. Pero, en caso de no pueda resolverlo, debemos solucionarlo y hacer el commit.
+
+Los archivos con conflictos por el comando `git merge` entran en un nuevo estado que conocemos como Unmerged. Funcionan muy parecido a los archivos en estado Unstaged, algo así como un estado intermedio entre Untracked y Unstaged, solo debemos ejecutar git add para pasarlos al área de staging y git commit para aplicar los cambios en el repositorio.
+
+## Trabajando con repositorios remotos en Github
+
+### Uso de GitHub
+
+GitHub es una plataforma que nos permite guardar repositorios de Git que podemos usar como servidores remotos y ejecutar algunos comandos de forma visual e interactiva (sin necesidad de la consola de comandos).
+
+Luego de crear nuestra cuenta, podemos crear o importar repositorios, crear organizaciones y proyectos de trabajo, descubrir repositorios de otras personas, contribuir a esos proyectos, dar estrellas y muchas otras cosas.
+
+El **README.md** es el archivo que veremos por defecto al entrar a un repositorio. *Es una muy buena práctica configurarlo para describir el proyecto, los requerimientos y las instrucciones que debemos seguir para contribuir correctamente*.
+
+Para clonar un repositorio desde GitHub (o cualquier otro servidor remoto) debemos copiar la URL (por ahora, usando HTTPS) y ejecutar el comando git clone + la URL que acabamos de copiar. Esto descargara la versión de nuestro proyecto que se encuentra en GitHub.
+
+Sin embargo, esto solo funciona para las personas que quieren empezar a contribuir en el proyecto. Si queremos conectar el repositorio de GitHub con nuestro repositorio local, el que creamos con git init, debemos ejecutar las siguientes instrucciones:
+
+```
+# Primero: Guardar la URL del repositorio de GitHub
+# con el nombre de origin
+git remote add origin URL
+
+# Segundo: Verificar que la URL se haya guardado
+# correctamente:
+git remote
+git remote -v
+
+# Tercero: Traer la versión del repositorio remoto y
+# hacer merge para crear un commit con los archivos
+# de ambas partes. Podemos usar git fetch y git merge
+# o solo el git pull con el flag --allow-unrelated-histories:
+git pull origin master --allow-unrelated-histories
+
+# Por último, ahora sí podemos hacer git push para guardar
+# los cambios de nuestro repositorio local en GitHub:
+git push origin master
+```
+
+- **git pull origin master --allow-unrelated-histories** Trae la versión del repositorio remoto y hace merge para crear un commit con los archivos de ambas partes (Cuandos las historias del servidor remoto es diferente a la del local)
+
+
+### Cómo funcionan las llaves públicas y privadas
+
+Las llaves públicas y privadas nos ayudan a cifrar y descifrar nuestros archivos de forma que los podamos compartir archivos sin correr el riesgo de que sean interceptados por personas con malas intenciones.
+
+La forma de hacerlo es la siguiente:
+
+1. Ambas personas deben crear su llave pública y privada.
+2. Ambas personas pueden compartir su llave pública a las otras partes (recuerda que esta llave es pública, no hay problema si la “interceptan”).
+3. La persona que quiere compartir un mensaje puede usar la llave pública de la otra persona para cifrar los archivos y asegurarse que solo puedan ser descifrados con la llave privada de la persona con la que queremos compartir el mensaje.
+4. El mensaje está cifrado y puede ser enviado a la otra persona sin problemas en caso de que los archivos sean interceptados.
+5. La persona a la que enviamos el mensaje cifrado puede usar su llave privada para descifrar el mensaje y ver los archivos.
+
+    Puedes compartir tu llave pública pero nunca tu llave privada.
+
+En la siguiente clase vamos a crear nuestras llaves para compartir archivos con GitHub sin correr el riesgo de que sean interceptados.
+
+### Configura tus llaves SSH en local
+
+**Primer paso: Generar tus llaves SSH**. Recuerda que es muy buena idea proteger tu llave privada con una contraseña.
+
+- `ssh-keygen -t rsa -b 4096 -C "tu@email.com"`
+
+**Segundo paso**: Terminar de configurar nuestro sistema.
+
+**En Windows y Linux:**
+
+```
+# Encender el "servidor" de llaves SSH de tu computadora:
+eval $(ssh-agent -s)
+
+# Añadir tu llave SSH a este "servidor":
+ssh-add ruta-donde-guardaste-tu-llave-privada
+
+```
+
+**En Mac:**
+
+```
+# Encender el "servidor" de llaves SSH de tu computadora:
+eval "$(ssh-agent -s)"
+
+# Si usas una versión de OSX superior a Mac Sierra (v10.12)
+# debes crear o modificar un archivo "config" en la carpeta
+# de tu usuario con el siguiente contenido (ten cuidado con
+# las mayúsculas):
+Host *
+        AddKeysToAgent yes
+        UseKeychain yes
+        IdentityFile ruta-donde-guardaste-tu-llave-privada
+
+# Añadir tu llave SSH al "servidor" de llaves SSH de tu
+# computadora (en caso de error puedes ejecutar este
+# mismo comando pero sin el argumento -K):
+ssh-add -K ruta-donde-guardaste-tu-llave-privada
+```
+
+
+
+### Conexión a GitHub con SSH
+
+Luego de crear nuestras llaves SSH podemos entregarle la llave pública a GitHub para comunicarnos de forma segura y sin necesidad de escribir nuestro usuario y contraseña todo el tiempo.
+
+Para esto debes entrar a la Configuración de Llaves SSH en GitHub, crear una nueva llave con el nombre que le quieras dar y el contenido de la llave pública de tu computadora.
+
+Ahora podemos actualizar la URL que guardamos en nuestro repositorio remoto, solo que, en vez de guardar la URL con HTTPS, vamos a usar la URL con SSH:
+
+*I M P O R T A N T E*
+- **git remote set-url origin url-ssh-del-repositorio-en-github**
+
+### Tags y versiones en Git y GitHub
+
+Los tags o etiquetas nos permiten asignar versiones a los commits con cambios más importantes o significativos de nuestro proyecto.
+
+Comandos para trabajar con etiquetas:
+
+- Crear un nuevo tag y asignarlo a un commit: `git tag -a nombre-del-tag id-del-commit`.
+- Borrar un tag en el repositorio local: `git tag -d nombre-del-tag`.
+- Listar los tags de nuestro repositorio local: `git tag o git show-refs --tags`.
+- Publicar un tag en el repositorio remoto: `git push origin --tags`.
+- Borrar un tag del repositorio remoto: `git tag -d nombre-del-tag` y `git push origin :refs/tags/nombre-del-tag`.
+
+
+### Manejo de ramas en GitHub
+
+Puedes trabajar con ramas que nunca envias a GitHub, así como pueden haber ramas importantes en GitHub que nunca usas en el repositorio local. Lo importantes que aprendas a manejarlas para trabajar profesionalmente.
+
+- Crear una rama en el repositorio local: `git branch nombre-de-la-rama` o `git checkout -b nombre-de-la-rama`.
+- Publicar una rama local al repositorio remoto: `git push origin nombre-de-la-rama`.
+
+> Recuerda que podemos ver gráficamente nuestro entorno y flujo de trabajo local con Git usando el comando gitk.
+
+
+### Configurar múltiples colaboradores en un repositorio de GitHub
+
+Por defecto, cualquier persona puede clonar o descargar tu proyecto desde GitHub, pero no pueden crear commits, ni ramas, ni nada.
+
+Existen varias formas de solucionar esto para poder aceptar contribuciones. Una de ellas es añadir a cada persona de nuestro equipo como colaborador de nuestro repositorio.
+
+Solo debemos entrar a la configuración de colaboradores de nuestro proyecto (*Repositorio > Settings > Collaborators*) y añadir el email o username de los nuevos colaboradores.
+
+
+## Flujos de trabajo profesionales
+
+### Flujo de trabajo profesional: Haciendo merge de ramas de desarrollo a master
+
+**Recomendación** Siempre manejar una rama desarrollo (U otro nombre que le parezca adecuado) para no trabajar directamente en master. La rama master dejarla sólo para producción
+
+### Flujo de trabajo profesional con Pull requests
+
+En un entorno profesional normalmente se bloquea la rama master, y para enviar código a dicha rama pasa por un `code review` y luego de su aprobación se unen códigos con los llamados `merge request`.
+
+Para realizar pruebas enviamos el código a servidores que normalmente los llamamos `staging develop` (servidores de pruebas) luego de que se realizan las pruebas pertinentes tanto de código como de la aplicación estos pasan a el servidor de producción con el ya antes mencionado merge request.
+
+**Pull Request** es una característica de Github y otras plataformas como GitLab o Bitbucket, porque su función es vincular a los programadores para que hagan aportes en proyectos, generalmente es muy útil es los de código abierto
+
+- ***Pull Request** Es como un staging del lado del servidor que permite agregar cambios entre las ramas, y hacer un code review del proyecto.
