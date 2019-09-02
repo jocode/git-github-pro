@@ -418,3 +418,126 @@ Para realizar pruebas enviamos el código a servidores que normalmente los llama
 **Pull Request** es una característica de Github y otras plataformas como GitLab o Bitbucket, porque su función es vincular a los programadores para que hagan aportes en proyectos, generalmente es muy útil es los de código abierto
 
 - ***Pull Request** Es como un staging del lado del servidor que permite agregar cambios entre las ramas, y hacer un code review del proyecto.
+
+### Creando un Fork, contribuyendo a un repositorio
+
+Para hacer un pull request, primero se debe hacer un **fork**. NO sirve clonar el repositorio simplemente desde el proyecto, porque github no hará la bifurcación del proyecto y no tendrá referenciado el repositorio original.
+
+### Ignorar archivos en el respositorio con .gitignore
+
+No todos los archivos que agregas a un proyecto deberían ir a un repositorio, por ejemplo cuando tienes un archivo donde están tus contraseñas que comúnmente tienen la extensión `.env` o cuando te estás conectando a una base de datos; son archivos que nadie debe ver.
+
+El archivo **.gitignore** es una lista de archivos que git ignorará, la sintaxis es similar como si estuvieramos buscando archivos.
+
+Una herramienta muy útil para generar automáticamente un .gitignore en determinadas tecnologías es [gitignore.io](https://www.gitignore.io/).
+
+
+### Readme.md es una excelente práctica
+
+`README.md` es una excelente práctica en tus proyectos, md significa Markdown es un especie de código que te permite cambiar la manera en que se ve un archivo de texto.
+
+Lo interesante de Markdown es que funciona en muchas páginas, por ejemplo la edición en Wikipedia; es un lenguaje intermedio que no es HTML, no es texto plano, es una manera de crear excelentes texto formateados.
+
+
+## Multiples entornos de trabajo
+
+### Git Rebase: Reorganizando el trabajo realizado
+
+El comando rebase es **una mala práctica**, nunca se debe usar, pero para efectos de curso te lo vamos a enseñar para que hagas tus propios experimentos. Con rebase puedes recoger todos los cambios confirmados en una rapa y ponerlos sobre otra.
+
+```
+# Cambiamos a la rama que queremos traer los cambios
+git checkout experiment
+# Aplicamos rebase para traer los cambios de la rama que queremos 
+git rebase master
+```
+
+> Un rebase es hacer cambios silenciosos en una rama y esa rama pegarla en la rama principal como si no hubiera existido la rama de los cambios. Se le hace rebase primero a la rama que cambia y luego a la rama final.
+
+
+### Git Stash: Guardar cambios en memoria y recuperarlos después
+
+Cuando necesitamos regresar en el tiempo porque borramos alguna línea de código pero no queremos pasarnos a otra rama porque nos daría un error ya que debemos pasar ese “mal cambio” que hicimos a stage, podemos usar `git stash` para regresar el cambio anterior que hicimos.
+
+git stash es típico cuando estamos cambios que no merecen una rama o no merecen un rebase si no simplemente estamos probando algo y luego quieres volver rápidamente a tu versión anterior la cual es la correcta.
+
+- **git stash**: Guarda los cambios temporalmente
+- **git stash list**: Muestra la lista de cambios temporales
+- **git stash pop**: Saca los cambios temporales y regresa los cambios al directorio de trabajo
+- **git stash drop**: Elimina los cambios temporales 
+
+Guardar los cambios y ponerlos en una rama
+
+- **git stash branch english-version**: Coloca el stash en una rama
+
+> El **Stash** es una forma útil de tener en temporal los cambios, es decir, que no merezcan realizarse un commit y poder mover entre ramas
+
+###  Clean: Limpiar tu proyecto de archivos no deseados
+
+A veces creamos archivos cuando estamos realizando nuestro proyecto que realmente no forman parte de nuestro directorio de trabajo, que no se debería agregar y lo sabemos.
+
+- Para saber qué archivos vamos a borrar tecleamos **git clean --dry-run**
+- Para borrar todos los archivos listados (que no son carpetas) tecleamos **git clean -f**
+
+### Git cherry-pick: Traer commits viejos al head de un branch
+
+Existe un mundo alternativo en el cual vamos avanzando en una rama pero necesitamos en master uno de esos avances de la rama, para eso utilizamos el comando `git cherry-pick IDCommit`.
+
+`cherry-pick` es una mala práctica porque significa que estamos reconstruyendo la historia, **usa cherry-pick con sabiduría**. Si no sabes lo que estás haciendo ten mucho cuidado.
+
+
+
+## Comandos en Git para casos de emergencia
+
+### Reconstruír commits en Git con amend
+
+A veces hacemos un commit, pero resulta que no queríamos mandarlo porque faltaba algo más. Utilizamos **git commit --amend**, amend en inglés es remendar y lo que hará es que los cambios que hicimos nos lo agregará al commit anterior.
+
+### Git Reset y Reflog: Úsese en caso de emergencia
+
+¿Qué pasa cuando todo se rompe y no sabemos qué está pasando? Con git reset HashDelHEAD nos devolveremos al estado en que el proyecto funcionaba.
+
+- `git reset --soft HashDelHEAD` te mantiene lo que tengas en staging ahí.
+- `git reset --hard HashDelHEAD` resetea absolutamente todo incluyendo lo que tengas en staging.
+
+**_git reset_ es una mala práctica, no deberías usarlo en ningún momento; debe ser nuestro último recurso.**
+
+- **git reflog** Encontramos la historia de los cambios realizados con los archivos en git, como las ramas o archivos eliminadas
+
+
+### Buscar en archivos y commits de Git con Grep y log
+
+A medida que nuestro proyecto se hace grande vamos a querer buscar ciertas cosas.
+
+Por ejemplo: ¿cuántas veces en nuestro proyecto utilizamos la palabra color?
+
+Para buscar utilizamos el comando git grep color y nos buscará en todo el proyecto los archivos en donde está la palabra color.
+
+- Con `git grep -n color` nos saldrá un output el cual nos dirá en qué **línea** está lo que estamos buscando.
+- Con `git grep -c color` nos saldrá un output el cual nos dirá **cuántas veces se repite esa palabra** y en qué archivo.
+- Si queremos buscar cuántas veces utilizamos un atributo de HTML lo hacemos con `git grep -c "<p>"`.
+
+- **git log -S palabra-buscar** Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
+
+
+## Comandos y recursos colaborativos en Git y Github
+
+- **`git shotlog`**:    Muestra la descripción de los commits y la cantidad por cada persona
+
+- **`git shortlog --sn`**:  Muestra la cantidad de commits por cada persona
+
+- **`git shortlog --sn --all --no-merges`**:    Muestra la cantidad de commit sin incluir los merge
+
+- **`git config --global alias.stasts "git shortlog --sn --all --no-merges"`**: Agregamos un alias de manera global en git
+
+- **`git blame file.ext`**  Vemos líneas por línea quien ha hecho los cambios
+
+- **`git blame -C file.ext`**   Muestra de una ejor forma las modificaciones realizadas línea por línea
+
+- **`git command --help`**  Muestra la documentación para ese comando.
+
+- **`git blame file.ext -L35,60`**  Muestra los cambios realizados desde la línea 35 hasta 60
+
+- **`git branch -r`**   Muestra el listado de ramas remotas (Las que están el el servidor)
+
+- **`git branch -a`**   Muestra todas las ramas, las del repositorio local y las del reposotorio remoto
