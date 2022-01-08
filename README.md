@@ -513,11 +513,13 @@ Por ejemplo: ¿cuántas veces en nuestro proyecto utilizamos la palabra color?
 
 Para buscar utilizamos el comando git grep color y nos buscará en todo el proyecto los archivos en donde está la palabra color.
 
-- Con `git grep -n color` nos saldrá un output el cual nos dirá en qué **línea** está lo que estamos buscando.
-- Con `git grep -c color` nos saldrá un output el cual nos dirá **cuántas veces se repite esa palabra** y en qué archivo.
+- Con `git grep -n "color"` nos saldrá un output el cual nos dirá en qué **línea** está lo que estamos buscando.
+- Con `git grep -c "color"` nos saldrá un output el cual nos dirá **cuántas veces se repite esa palabra** y en qué archivo.
 - Si queremos buscar cuántas veces utilizamos un atributo de HTML lo hacemos con `git grep -c "<p>"`.
+- También `git grep -w "color"` permite ver solo las palabras estrictamente iguales a "color".
 
 - **git log -S palabra-buscar** Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
+- Otra forma es utilizar **git log --grep "color"**. Muestra los commits donde se usó la palabra "color".
 
 
 ## Comandos y recursos colaborativos en Git y Github
