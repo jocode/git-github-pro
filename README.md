@@ -518,8 +518,8 @@ Para buscar utilizamos el comando git grep color y nos buscará en todo el proye
 - Si queremos buscar cuántas veces utilizamos un atributo de HTML lo hacemos con `git grep -c "<p>"`.
 - También `git grep -w "color"` permite ver solo las palabras estrictamente iguales a "color".
 
-- **git log -S palabra-buscar** Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
-- Otra forma es utilizar **git log --grep "color"**. Muestra los commits donde se usó la palabra "color".
+- `git log -S "color"` Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
+- Otra forma es utilizar `git log --grep "color"`. Muestra los commits donde se usó la palabra "color".
 
 
 ## Comandos y recursos colaborativos en Git y Github
