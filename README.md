@@ -17,14 +17,14 @@ En realidad, los cambios y diferencias entre las versiones de nuestros proyecto 
 - El comando para **almacenar definitivamente todos los cambios** que por ahora viven en el staging area es `git commit`. También podemos guardar un mensaje para recordar muy bien qué cambios hicimos en este commit con el argumento `-m "Mensaje del commit"`.
 - Por último, si queremos mandar nuestros commits a un servidor remoto, un lugar donde todos podamos conectar nuestros proyectos, usamos el comando `git push`.
 
-- **git init** Inicia el repositorio (Lo crea)
-- **git add** Agrega los archivos al área de preparación
-- **git commit** Envía los archivos al SCV
-- **git push** Envía los archivos del repositorio a un servidor remoto
-- **git status** Muestra el estado de los archivos
-- **git show** Muestra los cambios hechos 
-- **git log** Muestra los cambios de los archivos
-- **git log --oneline**  Muestra los commits en una sola línea
+- `**git init**` Inicia el repositorio (Lo crea)
+- `**git add**` Agrega los archivos al área de preparación
+- `**git commit**` Envía los archivos al SCV
+- `**git push**` Envía los archivos del repositorio a un servidor remoto
+- `**git status**` Muestra el estado de los archivos
+- `**git show**` Muestra los cambios hechos 
+- `**git log**` Muestra los cambios de los archivos
+- `**git log --oneline**`  Muestra los commits en una sola línea
 
 ### Instalando Git y GitBash en Windows
 
