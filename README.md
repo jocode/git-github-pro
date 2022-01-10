@@ -17,14 +17,14 @@ En realidad, los cambios y diferencias entre las versiones de nuestros proyecto 
 - El comando para **almacenar definitivamente todos los cambios** que por ahora viven en el staging area es `git commit`. También podemos guardar un mensaje para recordar muy bien qué cambios hicimos en este commit con el argumento `-m "Mensaje del commit"`.
 - Por último, si queremos mandar nuestros commits a un servidor remoto, un lugar donde todos podamos conectar nuestros proyectos, usamos el comando `git push`.
 
-- **git init** Inicia el repositorio (Lo crea)
-- **git add** Agrega los archivos al área de preparación
-- **git commit** Envía los archivos al SCV
-- **git push** Envía los archivos del repositorio a un servidor remoto
-- **git status** Muestra el estado de los archivos
-- **git show** Muestra los cambios hechos 
-- **git log** Muestra los cambios de los archivos
-- **git log --oneline**  Muestra los commits en una sola línea
+- `**git init**` Inicia el repositorio (Lo crea)
+- `**git add**` Agrega los archivos al área de preparación
+- `**git commit**` Envía los archivos al SCV
+- `**git push**` Envía los archivos del repositorio a un servidor remoto
+- `**git status**` Muestra el estado de los archivos
+- `**git show**` Muestra los cambios hechos 
+- `**git log**` Muestra los cambios de los archivos
+- `**git log --oneline**`  Muestra los commits en una sola línea
 
 ### Instalando Git y GitBash en Windows
 
@@ -379,7 +379,7 @@ Comandos para trabajar con etiquetas:
 
 - Crear un nuevo tag y asignarlo a un commit: `git tag -a nombre-del-tag id-del-commit`.
 - Borrar un tag en el repositorio local: `git tag -d nombre-del-tag`.
-- Listar los tags de nuestro repositorio local: `git tag o git show-refs --tags`.
+- Listar los tags de nuestro repositorio local: `git tag o git show-ref --tags`.
 - Publicar un tag en el repositorio remoto: `git push origin --tags`.
 - Borrar un tag del repositorio remoto: `git tag -d nombre-del-tag` y `git push origin :refs/tags/nombre-del-tag`.
 
@@ -390,6 +390,7 @@ Puedes trabajar con ramas que nunca envias a GitHub, así como pueden haber rama
 
 - Crear una rama en el repositorio local: `git branch nombre-de-la-rama` o `git checkout -b nombre-de-la-rama`.
 - Publicar una rama local al repositorio remoto: `git push origin nombre-de-la-rama`.
+- `git show-branch --all` Muestra los últimos commits de todas las ramas.
 
 > Recuerda que podemos ver gráficamente nuestro entorno y flujo de trabajo local con Git usando el comando gitk.
 
@@ -513,11 +514,13 @@ Por ejemplo: ¿cuántas veces en nuestro proyecto utilizamos la palabra color?
 
 Para buscar utilizamos el comando git grep color y nos buscará en todo el proyecto los archivos en donde está la palabra color.
 
-- Con `git grep -n color` nos saldrá un output el cual nos dirá en qué **línea** está lo que estamos buscando.
-- Con `git grep -c color` nos saldrá un output el cual nos dirá **cuántas veces se repite esa palabra** y en qué archivo.
+- Con `git grep -n "color"` nos saldrá un output el cual nos dirá en qué **línea** está lo que estamos buscando.
+- Con `git grep -c "color"` nos saldrá un output el cual nos dirá **cuántas veces se repite esa palabra** y en qué archivo.
 - Si queremos buscar cuántas veces utilizamos un atributo de HTML lo hacemos con `git grep -c "<p>"`.
+- También `git grep -w "color"` permite ver solo las palabras estrictamente iguales a "color".
 
-- **git log -S palabra-buscar** Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
+- `git log -S "color"` Busca la palabra en el historial de los commits (Los nombres y mensajes que hemos colocado al hacer commits)
+- Otra forma es utilizar `git log --grep "color"`. Muestra los commits donde se usó la palabra "color".
 
 
 ## Comandos y recursos colaborativos en Git y Github
